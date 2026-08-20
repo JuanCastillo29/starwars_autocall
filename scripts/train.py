@@ -28,6 +28,7 @@ directly.
 """
 
 import argparse
+import re
 from pathlib import Path
 
 import joblib
@@ -49,6 +50,13 @@ DEFAULT_LGB_PARAMS = dict(
     min_child_samples=20,
     random_state=0,
     verbosity=-1,
+    # Without row/feature subsampling, tree-building is fully deterministic
+    # and random_state is a no-op (verified: seeds 0 vs 1 gave bit-identical
+    # models). These make random_state actually do something, so
+    # grid_search.py's seed sweep is a real check of ranking stability.
+    subsample=0.8,
+    subsample_freq=1,
+    colsample_bytree=0.8,
 )
 
 
@@ -112,6 +120,39 @@ def cross_validate(features, splits, feature_cols, lgb_params, n_folds=N_FOLDS, 
     return pd.DataFrame(rows)
 
 
+def _slug(text):
+    return re.sub(r"[^0-9a-zA-Z]+", "_", text).strip("_")
+
+
+def mae_by_product(eval_df, target=TARGET):
+    """Test MAE within each product_type, from the one-hot product_type_*
+    columns. The pooled test_mae can hide a model that's fine on 5 products
+    and bad on the 6th.
+    """
+    product_cols = [c for c in eval_df.columns if c.startswith("product_type_")]
+    rows = []
+    for col in product_cols:
+        sub = eval_df[eval_df[col] == 1]
+        if sub.empty:
+            continue
+        mae = mean_absolute_error(sub[target], sub["pred"])
+        rows.append({"product_type": col.removeprefix("product_type_"), "n": len(sub), "MAE": round(mae, 4)})
+    return pd.DataFrame(rows).sort_values("MAE", ascending=False, ignore_index=True)
+
+
+def mae_by_target_percentile(eval_df, target=TARGET, n_bins=4):
+    """Test MAE within quantile bins of the true target. Shows whether the
+    model is worse on long-duration RFQs than short ones, not just on
+    average (relevant here since the target is right-skewed, EDA §1).
+    """
+    bins = pd.qcut(eval_df[target], n_bins, duplicates="drop")
+    rows = []
+    for i, (interval, sub) in enumerate(eval_df.groupby(bins, observed=True)):
+        mae = mean_absolute_error(sub[target], sub["pred"])
+        rows.append({"bin": i, "range": str(interval), "n": len(sub), "MAE": round(mae, 4)})
+    return pd.DataFrame(rows)
+
+
 def fit_final(features, splits, feature_cols, lgb_params, log_curves=True):
     train_val_mask = splits.split == "train_val"
     test_mask = splits.split == "test"
@@ -120,24 +161,43 @@ def fit_final(features, splits, feature_cols, lgb_params, log_curves=True):
     )
     if log_curves:
         log_loss_curve(model, eval_name="test", prefix="final_")
-    mae = mean_absolute_error(features.loc[test_mask, TARGET], preds)
-    return model, mae, int(test_mask.sum())
+
+    eval_df = features[test_mask].copy()
+    eval_df["pred"] = preds
+    mae = mean_absolute_error(eval_df[TARGET], eval_df["pred"])
+    product_breakdown = mae_by_product(eval_df)
+    percentile_breakdown = mae_by_target_percentile(eval_df)
+
+    return model, mae, int(test_mask.sum()), product_breakdown, percentile_breakdown
 
 
-def run_training(features, splits, version, lgb_params, run_name=None, log_model=True, log_fold_curves=False):
+def run_training(
+    features, splits, version, lgb_params, run_name=None,
+    log_model=True, log_fold_curves=False, log_final_curve=True, tags=None,
+):
     """One MLflow run: purged CV, then a final fit against the test split.
 
     log_fold_curves logs a full train/val/gap curve for every CV fold too
     (fold{k}_train_mae etc.), not just the final model's (final_*), off by
     default since it's 5x the step-metric HTTP calls for a diagnostic that's
-    mostly useful when actually chasing an overfitting fold.
+    mostly useful when actually chasing an overfitting fold. log_final_curve
+    and log_model default on for a single run but scripts/grid_search.py
+    turns both off per-combination (they dominate a grid's wall time) and
+    re-enables them only for the winning combination's confirmation run.
 
-    Returns (model, cv_results, test_mae) so callers (main(), grid_search.py)
-    can inspect results without re-reading MLflow.
+    Also logs the final model's test MAE broken down by product_type
+    (test_mae_product_{name}) and by quartile of the true target
+    (test_mae_by_target_pctile, as a 4-step metric). The pooled test_mae can
+    hide a model that's fine on 5 products, or on short-duration RFQs, and
+    bad everywhere else.
+
+    Returns (model, cv_results, test_mae, product_breakdown,
+    percentile_breakdown) so callers (main(), grid_search.py) can inspect
+    results without re-reading MLflow.
     """
     feature_cols = [c for c in features.columns if c != TARGET]
 
-    with mlflow.start_run(run_name=run_name):
+    with mlflow.start_run(run_name=run_name, tags=tags):
         mlflow.log_params(lgb_params)
         mlflow.log_params({"dataset_version": version, "n_folds": N_FOLDS, "n_features": len(feature_cols)})
 
@@ -147,14 +207,21 @@ def run_training(features, splits, version, lgb_params, run_name=None, log_model
         mlflow.log_metric("cv_mae_mean", cv_results.MAE.mean())
         mlflow.log_metric("cv_mae_std", cv_results.MAE.std())
 
-        model, test_mae, n_test = fit_final(features, splits, feature_cols, lgb_params)
+        model, test_mae, n_test, product_breakdown, percentile_breakdown = fit_final(
+            features, splits, feature_cols, lgb_params, log_curves=log_final_curve
+        )
         mlflow.log_metric("test_mae", test_mae)
         mlflow.log_param("n_test", n_test)
+
+        for _, row in product_breakdown.iterrows():
+            mlflow.log_metric(f"test_mae_product_{_slug(row.product_type)}", row.MAE)
+        for _, row in percentile_breakdown.iterrows():
+            mlflow.log_metric("test_mae_by_target_pctile", row.MAE, step=int(row.bin))
 
         if log_model:
             mlflow.lightgbm.log_model(model, name="model")
 
-    return model, cv_results, test_mae
+    return model, cv_results, test_mae, product_breakdown, percentile_breakdown
 
 
 def main():
@@ -180,7 +247,7 @@ def main():
     print(f"v{version}: {len(features):,} rows, {features.shape[1] - 1} features")
 
     mlflow.set_experiment(EXPERIMENT_NAME)
-    model, cv_results, test_mae = run_training(
+    model, cv_results, test_mae, product_breakdown, percentile_breakdown = run_training(
         features, splits, version, DEFAULT_LGB_PARAMS, run_name=f"v{version}", log_fold_curves=args.fold_curves
     )
 
@@ -188,6 +255,11 @@ def main():
     print(cv_results.to_string(index=False))
     print(f"mean MAE: {cv_results.MAE.mean():.4f}  std: {cv_results.MAE.std():.4f}")
     print(f"\nFinal model trained on train_val, scored on held-out test rows: MAE = {test_mae:.4f}")
+
+    print("\nTest MAE by product_type:")
+    print(product_breakdown.to_string(index=False))
+    print("\nTest MAE by target quartile:")
+    print(percentile_breakdown.to_string(index=False))
 
     model_out = args.model_out or args.data_dir / f"v{version}" / "model.joblib"
     model_out.parent.mkdir(parents=True, exist_ok=True)
