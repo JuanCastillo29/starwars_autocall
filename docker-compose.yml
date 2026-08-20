@@ -8,5 +8,19 @@ services:
     ports:
       - "8000:8000"   # API
       - "8888:8888"   # JupyterLab
+    environment:
+      - MLFLOW_TRACKING_URI=http://mlflow:5000
+      - GIT_PYTHON_REFRESH=quiet   # no git binary in this image; mlflow only uses it for run metadata
+    depends_on:
+      - mlflow
     stdin_open: true
     tty: true
+
+  mlflow:
+    build:
+      context: .
+      dockerfile: docker/mlflow.Dockerfile
+    volumes:
+      - ./mlruns:/mlruns
+    ports:
+      - "5000:5000"   # MLflow UI + tracking server

@@ -220,3 +220,6 @@ __marimo__/
 # Data
 *.csv
 *.pdf
+
+# MLflow tracking store (docker/mlflow.Dockerfile, docker-compose.yml)
+mlruns/
