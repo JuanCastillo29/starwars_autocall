@@ -1,0 +1,1572 @@
+{
+  "files": [
+    {
+      "file": "rfqs.csv",
+      "rows": 25000,
+      "columns": 17,
+      "duplicate rows": 0
+    },
+    {
+      "file": "daily_volatility.csv",
+      "rows": 44744,
+      "columns": 3,
+      "duplicate rows": 0
+    },
+    {
+      "file": "underlyings_reference.csv",
+      "rows": 14,
+      "columns": 3,
+      "duplicate rows": 0
+    }
+  ],
+  "rfq_columns": [
+    {
+      "column": "rfq_id",
+      "dtype": "str",
+      "nulls": 0,
+      "% null": 0.0,
+      "distinct": 25000
+    },
+    {
+      "column": "product_type",
+      "dtype": "str",
+      "nulls": 0,
+      "% null": 0.0,
+      "distinct": 6
+    },
+    {
+      "column": "underlyings",
+      "dtype": "str",
+      "nulls": 0,
+      "% null": 0.0,
+      "distinct": 2043
+    },
+    {
+      "column": "basket_type",
+      "dtype": "str",
+      "nulls": 0,
+      "% null": 0.0,
+      "distinct": 2
+    },
+    {
+      "column": "autocall_barrier_pct",
+      "dtype": "float64",
+      "nulls": 0,
+      "% null": 0.0,
+      "distinct": 3468
+    },
+    {
+      "column": "protection_barrier_pct",
+      "dtype": "float64",
+      "nulls": 0,
+      "% null": 0.0,
+      "distinct": 3409
+    },
+    {
+      "column": "no_call_period_months",
+      "dtype": "int64",
+      "nulls": 0,
+      "% null": 0.0,
+      "distinct": 7
+    },
+    {
+      "column": "observation_frequency",
+      "dtype": "str",
+      "nulls": 0,
+      "% null": 0.0,
+      "distinct": 18
+    },
+    {
+      "column": "quoted_implied_vol",
+      "dtype": "float64",
+      "nulls": 0,
+      "% null": 0.0,
+      "distinct": 4146
+    },
+    {
+      "column": "notional_credits",
+      "dtype": "int64",
+      "nulls": 0,
+      "% null": 0.0,
+      "distinct": 7
+    },
+    {
+      "column": "counterparty",
+      "dtype": "str",
+      "nulls": 0,
+      "% null": 0.0,
+      "distinct": 8
+    },
+    {
+      "column": "trader_id",
+      "dtype": "str",
+      "nulls": 0,
+      "% null": 0.0,
+      "distinct": 39
+    },
+    {
+      "column": "requested_date",
+      "dtype": "datetime64[us]",
+      "nulls": 0,
+      "% null": 0.0,
+      "distinct": 2215
+    },
+    {
+      "column": "executed",
+      "dtype": "bool",
+      "nulls": 0,
+      "% null": 0.0,
+      "distinct": 2
+    },
+    {
+      "column": "start_date",
+      "dtype": "datetime64[us]",
+      "nulls": 0,
+      "% null": 0.0,
+      "distinct": 3093
+    },
+    {
+      "column": "end_date",
+      "dtype": "datetime64[us]",
+      "nulls": 0,
+      "% null": 0.0,
+      "distinct": 5289
+    },
+    {
+      "column": "avg_duration_months",
+      "dtype": "float64",
+      "nulls": 11204,
+      "% null": 44.82,
+      "distinct": 6506
+    }
+  ],
+  "rfq_numeric": [
+    {
+      "column": "autocall_barrier_pct",
+      "count": 25000.0,
+      "mean": 1.139,
+      "std": 0.147,
+      "min": 0.95,
+      "25%": 1.0,
+      "50%": 1.153,
+      "75%": 1.276,
+      "max": 1.4
+    },
+    {
+      "column": "protection_barrier_pct",
+      "count": 25000.0,
+      "mean": 0.664,
+      "std": 0.096,
+      "min": 0.5,
+      "25%": 0.6,
+      "50%": 0.622,
+      "75%": 0.761,
+      "max": 0.85
+    },
+    {
+      "column": "no_call_period_months",
+      "count": 25000.0,
+      "mean": 1.48,
+      "std": 2.017,
+      "min": 0.0,
+      "25%": 0.0,
+      "50%": 0.0,
+      "75%": 3.0,
+      "max": 6.0
+    },
+    {
+      "column": "quoted_implied_vol",
+      "count": 25000.0,
+      "mean": 0.279,
+      "std": 0.089,
+      "min": 0.094,
+      "25%": 0.218,
+      "50%": 0.274,
+      "75%": 0.33,
+      "max": 0.6
+    },
+    {
+      "column": "notional_credits",
+      "count": 25000.0,
+      "mean": 676412.0,
+      "std": 1695564.509,
+      "min": 100000.0,
+      "25%": 100000.0,
+      "50%": 250000.0,
+      "75%": 500000.0,
+      "max": 20000000.0
+    },
+    {
+      "column": "tenor_months",
+      "count": 25000.0,
+      "mean": 71.914,
+      "std": 27.653,
+      "min": 24.014,
+      "25%": 47.988,
+      "50%": 71.748,
+      "75%": 95.828,
+      "max": 119.974
+    },
+    {
+      "column": "basket_size",
+      "count": 25000.0,
+      "mean": 1.828,
+      "std": 0.689,
+      "min": 1.0,
+      "25%": 1.0,
+      "50%": 2.0,
+      "75%": 2.0,
+      "max": 3.0
+    }
+  ],
+  "rfq_categorical": {
+    "product_type": [
+      {
+        "value": "Holocron Reverse Convertible",
+        "count": 4245,
+        "share": 16.98
+      },
+      {
+        "value": "Mandalorian Twin-Win",
+        "count": 4216,
+        "share": 16.86
+      },
+      {
+        "value": "Wretched Hive Digital",
+        "count": 4167,
+        "share": 16.67
+      },
+      {
+        "value": "Sith Eternal Snowball",
+        "count": 4160,
+        "share": 16.64
+      },
+      {
+        "value": "Death Star Phoenix Note",
+        "count": 4148,
+        "share": 16.59
+      },
+      {
+        "value": "Kessel Run Snowball",
+        "count": 4064,
+        "share": 16.26
+      }
+    ],
+    "basket_type": [
+      {
+        "value": "worst_of",
+        "count": 16539,
+        "share": 66.16
+      },
+      {
+        "value": "single",
+        "count": 8461,
+        "share": 33.84
+      }
+    ],
+    "observation_frequency": [
+      {
+        "value": "1M",
+        "count": 6174,
+        "share": 24.7
+      },
+      {
+        "value": "3M",
+        "count": 5298,
+        "share": 21.19
+      },
+      {
+        "value": "6M",
+        "count": 3618,
+        "share": 14.47
+      },
+      {
+        "value": "2M",
+        "count": 1995,
+        "share": 7.98
+      },
+      {
+        "value": "1Y",
+        "count": 1601,
+        "share": 6.4
+      },
+      {
+        "value": "1D",
+        "count": 711,
+        "share": 2.84
+      },
+      {
+        "value": "Monthly",
+        "count": 670,
+        "share": 2.68
+      },
+      {
+        "value": "mensual",
+        "count": 667,
+        "share": 2.67
+      },
+      {
+        "value": "1 month",
+        "count": 658,
+        "share": 2.63
+      },
+      {
+        "value": "M",
+        "count": 651,
+        "share": 2.6
+      },
+      {
+        "value": "Quarterly",
+        "count": 576,
+        "share": 2.3
+      },
+      {
+        "value": "trimestral",
+        "count": 570,
+        "share": 2.28
+      },
+      {
+        "value": "Q",
+        "count": 566,
+        "share": 2.26
+      },
+      {
+        "value": "3 months",
+        "count": 559,
+        "share": 2.24
+      },
+      {
+        "value": "12M",
+        "count": 191,
+        "share": 0.76
+      },
+      {
+        "value": "Y",
+        "count": 175,
+        "share": 0.7
+      },
+      {
+        "value": "Annual",
+        "count": 164,
+        "share": 0.66
+      },
+      {
+        "value": "anual",
+        "count": 156,
+        "share": 0.62
+      }
+    ],
+    "counterparty": [
+      {
+        "value": "Corellian Capital",
+        "count": 3195,
+        "share": 12.78
+      },
+      {
+        "value": "Kamino Cloning Trust",
+        "count": 3160,
+        "share": 12.64
+      },
+      {
+        "value": "Banco de Coruscant",
+        "count": 3157,
+        "share": 12.63
+      },
+      {
+        "value": "Chandrila Sovereign Fund",
+        "count": 3125,
+        "share": 12.5
+      },
+      {
+        "value": "Alderaan Wealth Partners",
+        "count": 3111,
+        "share": 12.44
+      },
+      {
+        "value": "First Order Financial",
+        "count": 3099,
+        "share": 12.4
+      },
+      {
+        "value": "Jabba Asset Management",
+        "count": 3086,
+        "share": 12.34
+      },
+      {
+        "value": "Nal Hutta Traders",
+        "count": 3067,
+        "share": 12.27
+      }
+    ],
+    "trader_id": [
+      {
+        "value": "TRD-018",
+        "count": 681,
+        "share": 2.72
+      },
+      {
+        "value": "TRD-010",
+        "count": 676,
+        "share": 2.7
+      },
+      {
+        "value": "TRD-016",
+        "count": 672,
+        "share": 2.69
+      },
+      {
+        "value": "TRD-022",
+        "count": 669,
+        "share": 2.68
+      },
+      {
+        "value": "TRD-036",
+        "count": 667,
+        "share": 2.67
+      },
+      {
+        "value": "TRD-039",
+        "count": 664,
+        "share": 2.66
+      },
+      {
+        "value": "TRD-005",
+        "count": 662,
+        "share": 2.65
+      },
+      {
+        "value": "TRD-037",
+        "count": 661,
+        "share": 2.64
+      },
+      {
+        "value": "TRD-014",
+        "count": 659,
+        "share": 2.64
+      },
+      {
+        "value": "TRD-009",
+        "count": 657,
+        "share": 2.63
+      },
+      {
+        "value": "TRD-032",
+        "count": 656,
+        "share": 2.62
+      },
+      {
+        "value": "TRD-028",
+        "count": 656,
+        "share": 2.62
+      },
+      {
+        "value": "TRD-024",
+        "count": 656,
+        "share": 2.62
+      },
+      {
+        "value": "TRD-023",
+        "count": 653,
+        "share": 2.61
+      },
+      {
+        "value": "TRD-020",
+        "count": 651,
+        "share": 2.6
+      },
+      {
+        "value": "TRD-026",
+        "count": 649,
+        "share": 2.6
+      },
+      {
+        "value": "TRD-015",
+        "count": 646,
+        "share": 2.58
+      },
+      {
+        "value": "TRD-001",
+        "count": 644,
+        "share": 2.58
+      },
+      {
+        "value": "TRD-003",
+        "count": 643,
+        "share": 2.57
+      },
+      {
+        "value": "TRD-017",
+        "count": 637,
+        "share": 2.55
+      }
+    ]
+  },
+  "frequency_map": [
+    {
+      "months between observations": 0.047619047619047616,
+      "RFQs": 711
+    },
+    {
+      "months between observations": 1.0,
+      "RFQs": 8820
+    },
+    {
+      "months between observations": 2.0,
+      "RFQs": 1995
+    },
+    {
+      "months between observations": 3.0,
+      "RFQs": 7569
+    },
+    {
+      "months between observations": 6.0,
+      "RFQs": 3618
+    },
+    {
+      "months between observations": 12.0,
+      "RFQs": 2287
+    }
+  ],
+  "target": [
+    {
+      "column": "avg_duration_months",
+      "count": 13796.0,
+      "mean": 39.783,
+      "std": 22.105,
+      "min": 0.16,
+      "25%": 23.568,
+      "50%": 35.38,
+      "75%": 51.952,
+      "max": 127.71
+    },
+    {
+      "column": "duration_ratio",
+      "count": 13796.0,
+      "mean": 0.579,
+      "std": 0.245,
+      "min": 0.003,
+      "25%": 0.4,
+      "50%": 0.579,
+      "75%": 0.778,
+      "max": 1.203
+    }
+  ],
+  "correlations": [
+    {
+      "feature": "tenor_months",
+      "spearman vs target": 0.511
+    },
+    {
+      "feature": "basket_size",
+      "spearman vs target": 0.37
+    },
+    {
+      "feature": "protection_barrier_pct",
+      "spearman vs target": -0.326
+    },
+    {
+      "feature": "obs_freq_months",
+      "spearman vs target": 0.223
+    },
+    {
+      "feature": "no_call_period_months",
+      "spearman vs target": 0.109
+    },
+    {
+      "feature": "quoted_implied_vol",
+      "spearman vs target": -0.048
+    },
+    {
+      "feature": "autocall_barrier_pct",
+      "spearman vs target": -0.007
+    },
+    {
+      "feature": "notional_credits",
+      "spearman vs target": -0.001
+    }
+  ],
+  "by_category": {
+    "product_type": [
+      {
+        "product_type": "Death Star Phoenix Note",
+        "count": 2283,
+        "mean": 34.69,
+        "median": 31.13,
+        "std": 18.05
+      },
+      {
+        "product_type": "Holocron Reverse Convertible",
+        "count": 2367,
+        "mean": 28.76,
+        "median": 26.32,
+        "std": 16.62
+      },
+      {
+        "product_type": "Kessel Run Snowball",
+        "count": 2219,
+        "mean": 38.96,
+        "median": 35.51,
+        "std": 18.03
+      },
+      {
+        "product_type": "Mandalorian Twin-Win",
+        "count": 2299,
+        "mean": 28.59,
+        "median": 26.0,
+        "std": 16.99
+      },
+      {
+        "product_type": "Sith Eternal Snowball",
+        "count": 2304,
+        "mean": 48.01,
+        "median": 44.44,
+        "std": 20.63
+      },
+      {
+        "product_type": "Wretched Hive Digital",
+        "count": 2324,
+        "mean": 59.71,
+        "median": 57.82,
+        "std": 23.33
+      }
+    ],
+    "obs_freq_months": [
+      {
+        "obs_freq_months": 0.047619047619047616,
+        "count": 392,
+        "mean": 32.09,
+        "median": 27.56,
+        "std": 21.76
+      },
+      {
+        "obs_freq_months": 1.0,
+        "count": 4903,
+        "mean": 35.49,
+        "median": 30.76,
+        "std": 21.64
+      },
+      {
+        "obs_freq_months": 2.0,
+        "count": 1085,
+        "mean": 39.79,
+        "median": 35.11,
+        "std": 22.74
+      },
+      {
+        "obs_freq_months": 3.0,
+        "count": 4126,
+        "mean": 40.16,
+        "median": 36.05,
+        "std": 21.45
+      },
+      {
+        "obs_freq_months": 6.0,
+        "count": 2034,
+        "mean": 44.13,
+        "median": 39.84,
+        "std": 21.23
+      },
+      {
+        "obs_freq_months": 12.0,
+        "count": 1256,
+        "mean": 50.67,
+        "median": 46.74,
+        "std": 21.58
+      }
+    ],
+    "basket_type": [
+      {
+        "basket_type": "single",
+        "count": 4666,
+        "mean": 28.68,
+        "median": 26.23,
+        "std": 16.8
+      },
+      {
+        "basket_type": "worst_of",
+        "count": 9130,
+        "mean": 45.46,
+        "median": 41.24,
+        "std": 22.34
+      }
+    ],
+    "basket_size": [
+      {
+        "basket_size": 1,
+        "count": 4666,
+        "mean": 28.68,
+        "median": 26.23,
+        "std": 16.8
+      },
+      {
+        "basket_size": 2,
+        "count": 6826,
+        "mean": 44.6,
+        "median": 39.75,
+        "std": 22.82
+      },
+      {
+        "basket_size": 3,
+        "count": 2304,
+        "mean": 48.01,
+        "median": 44.44,
+        "std": 20.63
+      }
+    ],
+    "no_call_period_months": [
+      {
+        "no_call_period_months": 0,
+        "count": 7901,
+        "mean": 38.79,
+        "median": 33.68,
+        "std": 23.69
+      },
+      {
+        "no_call_period_months": 1,
+        "count": 889,
+        "mean": 38.68,
+        "median": 35.37,
+        "std": 19.76
+      },
+      {
+        "no_call_period_months": 2,
+        "count": 911,
+        "mean": 38.21,
+        "median": 34.52,
+        "std": 18.46
+      },
+      {
+        "no_call_period_months": 3,
+        "count": 1427,
+        "mean": 39.62,
+        "median": 36.18,
+        "std": 18.56
+      },
+      {
+        "no_call_period_months": 4,
+        "count": 885,
+        "mean": 41.76,
+        "median": 37.95,
+        "std": 19.67
+      },
+      {
+        "no_call_period_months": 5,
+        "count": 888,
+        "mean": 43.2,
+        "median": 39.17,
+        "std": 20.58
+      },
+      {
+        "no_call_period_months": 6,
+        "count": 895,
+        "mean": 46.18,
+        "median": 42.69,
+        "std": 20.56
+      }
+    ]
+  },
+  "variance_explained": [
+    {
+      "column": "product_type",
+      "levels": 6,
+      "eta squared": 0.2544,
+      "shuffled": 0.0004
+    },
+    {
+      "column": "basket_size",
+      "levels": 3,
+      "eta squared": 0.132,
+      "shuffled": 0.0001
+    },
+    {
+      "column": "basket_type",
+      "levels": 2,
+      "eta squared": 0.129,
+      "shuffled": 0.0001
+    },
+    {
+      "column": "observation_frequency",
+      "levels": 18,
+      "eta squared": 0.0454,
+      "shuffled": 0.0014
+    },
+    {
+      "column": "obs_freq_months",
+      "levels": 6,
+      "eta squared": 0.0447,
+      "shuffled": 0.0004
+    },
+    {
+      "column": "no_call_period_months",
+      "levels": 7,
+      "eta squared": 0.0091,
+      "shuffled": 0.0005
+    },
+    {
+      "column": "trader_id",
+      "levels": 39,
+      "eta squared": 0.0043,
+      "shuffled": 0.0028
+    },
+    {
+      "column": "counterparty",
+      "levels": 8,
+      "eta squared": 0.0004,
+      "shuffled": 0.0004
+    }
+  ],
+  "dependencies": [
+    {
+      "column": "product_type",
+      "determines": "basket_type",
+      "purity": 1.0,
+      "levels": 6
+    },
+    {
+      "column": "product_type",
+      "determines": "basket_size",
+      "purity": 1.0,
+      "levels": 6
+    },
+    {
+      "column": "basket_size",
+      "determines": "basket_type",
+      "purity": 1.0,
+      "levels": 3
+    }
+  ],
+  "per_underlying": [
+    {
+      "underlying": "BSKR",
+      "rows": 3196,
+      "first": "2014-04-01",
+      "last": "2026-06-30",
+      "max_gap": 3.0,
+      "mean": 0.365,
+      "median": 0.328,
+      "std": 0.095,
+      "min": 0.208,
+      "max": 0.592
+    },
+    {
+      "underlying": "CLNE",
+      "rows": 3196,
+      "first": "2014-04-01",
+      "last": "2026-06-30",
+      "max_gap": 3.0,
+      "mean": 0.186,
+      "median": 0.166,
+      "std": 0.05,
+      "min": 0.114,
+      "max": 0.339
+    },
+    {
+      "underlying": "CORL",
+      "rows": 3196,
+      "first": "2014-04-01",
+      "last": "2026-06-30",
+      "max_gap": 3.0,
+      "mean": 0.346,
+      "median": 0.314,
+      "std": 0.086,
+      "min": 0.222,
+      "max": 0.595
+    },
+    {
+      "underlying": "DRC",
+      "rows": 3196,
+      "first": "2014-04-01",
+      "last": "2026-06-30",
+      "max_gap": 3.0,
+      "mean": 0.382,
+      "median": 0.343,
+      "std": 0.099,
+      "min": 0.23,
+      "max": 0.638
+    },
+    {
+      "underlying": "HTTX",
+      "rows": 3196,
+      "first": "2014-04-01",
+      "last": "2026-06-30",
+      "max_gap": 3.0,
+      "mean": 0.874,
+      "median": 0.886,
+      "std": 0.258,
+      "min": 0.395,
+      "max": 1.624
+    },
+    {
+      "underlying": "JEDI",
+      "rows": 3196,
+      "first": "2014-04-01",
+      "last": "2026-06-30",
+      "max_gap": 3.0,
+      "mean": 0.172,
+      "median": 0.156,
+      "std": 0.043,
+      "min": 0.096,
+      "max": 0.284
+    },
+    {
+      "underlying": "KYBR",
+      "rows": 3196,
+      "first": "2014-04-01",
+      "last": "2026-06-30",
+      "max_gap": 3.0,
+      "mean": 0.265,
+      "median": 0.236,
+      "std": 0.067,
+      "min": 0.162,
+      "max": 0.449
+    },
+    {
+      "underlying": "MNDO",
+      "rows": 3196,
+      "first": "2014-04-01",
+      "last": "2026-06-30",
+      "max_gap": 3.0,
+      "mean": 0.43,
+      "median": 0.382,
+      "std": 0.116,
+      "min": 0.292,
+      "max": 0.823
+    },
+    {
+      "underlying": "NABO",
+      "rows": 3196,
+      "first": "2014-04-01",
+      "last": "2026-06-30",
+      "max_gap": 3.0,
+      "mean": 0.137,
+      "median": 0.123,
+      "std": 0.034,
+      "min": 0.09,
+      "max": 0.253
+    },
+    {
+      "underlying": "POBK",
+      "rows": 3196,
+      "first": "2014-04-01",
+      "last": "2026-06-30",
+      "max_gap": 3.0,
+      "mean": 0.507,
+      "median": 0.453,
+      "std": 0.128,
+      "min": 0.319,
+      "max": 0.883
+    },
+    {
+      "underlying": "REBL",
+      "rows": 3196,
+      "first": "2014-04-01",
+      "last": "2026-06-30",
+      "max_gap": 3.0,
+      "mean": 0.478,
+      "median": 0.513,
+      "std": 0.211,
+      "min": 0.144,
+      "max": 0.991
+    },
+    {
+      "underlying": "SITH",
+      "rows": 3196,
+      "first": "2014-04-01",
+      "last": "2026-06-30",
+      "max_gap": 3.0,
+      "mean": 0.319,
+      "median": 0.28,
+      "std": 0.084,
+      "min": 0.202,
+      "max": 0.572
+    },
+    {
+      "underlying": "TECH",
+      "rows": 3196,
+      "first": "2014-04-01",
+      "last": "2026-06-30",
+      "max_gap": 3.0,
+      "mean": 0.391,
+      "median": 0.348,
+      "std": 0.099,
+      "min": 0.258,
+      "max": 0.699
+    },
+    {
+      "underlying": "WOOK",
+      "rows": 3196,
+      "first": "2014-04-01",
+      "last": "2026-06-30",
+      "max_gap": 3.0,
+      "mean": 0.333,
+      "median": 0.3,
+      "std": 0.085,
+      "min": 0.205,
+      "max": 0.57
+    }
+  ],
+  "vol_stationarity": [
+    {
+      "underlying": "BSKR",
+      "n_obs": 3169,
+      "lags": 26,
+      "ADF statistic": -6.003,
+      "p-value": 0.0,
+      "stationary at 5%": true
+    },
+    {
+      "underlying": "CLNE",
+      "n_obs": 3177,
+      "lags": 18,
+      "ADF statistic": -5.085,
+      "p-value": 0.0,
+      "stationary at 5%": true
+    },
+    {
+      "underlying": "CORL",
+      "n_obs": 3170,
+      "lags": 25,
+      "ADF statistic": -4.856,
+      "p-value": 0.0,
+      "stationary at 5%": true
+    },
+    {
+      "underlying": "DRC",
+      "n_obs": 3178,
+      "lags": 17,
+      "ADF statistic": -4.665,
+      "p-value": 0.0001,
+      "stationary at 5%": true
+    },
+    {
+      "underlying": "HTTX",
+      "n_obs": 3195,
+      "lags": 0,
+      "ADF statistic": -5.286,
+      "p-value": 0.0,
+      "stationary at 5%": true
+    },
+    {
+      "underlying": "JEDI",
+      "n_obs": 3168,
+      "lags": 27,
+      "ADF statistic": -5.518,
+      "p-value": 0.0,
+      "stationary at 5%": true
+    },
+    {
+      "underlying": "KYBR",
+      "n_obs": 3170,
+      "lags": 25,
+      "ADF statistic": -5.403,
+      "p-value": 0.0,
+      "stationary at 5%": true
+    },
+    {
+      "underlying": "MNDO",
+      "n_obs": 3171,
+      "lags": 24,
+      "ADF statistic": -5.44,
+      "p-value": 0.0,
+      "stationary at 5%": true
+    },
+    {
+      "underlying": "NABO",
+      "n_obs": 3171,
+      "lags": 24,
+      "ADF statistic": -5.834,
+      "p-value": 0.0,
+      "stationary at 5%": true
+    },
+    {
+      "underlying": "POBK",
+      "n_obs": 3175,
+      "lags": 20,
+      "ADF statistic": -5.124,
+      "p-value": 0.0,
+      "stationary at 5%": true
+    },
+    {
+      "underlying": "REBL",
+      "n_obs": 3193,
+      "lags": 2,
+      "ADF statistic": -5.4,
+      "p-value": 0.0,
+      "stationary at 5%": true
+    },
+    {
+      "underlying": "SITH",
+      "n_obs": 3167,
+      "lags": 28,
+      "ADF statistic": -4.869,
+      "p-value": 0.0,
+      "stationary at 5%": true
+    },
+    {
+      "underlying": "TECH",
+      "n_obs": 3167,
+      "lags": 28,
+      "ADF statistic": -5.333,
+      "p-value": 0.0,
+      "stationary at 5%": true
+    },
+    {
+      "underlying": "WOOK",
+      "n_obs": 3176,
+      "lags": 19,
+      "ADF statistic": -5.162,
+      "p-value": 0.0,
+      "stationary at 5%": true
+    }
+  ],
+  "vol_periodicity": [
+    {
+      "underlying": "HTTX",
+      "n_obs": 3196,
+      "dominant period (trading days)": 160,
+      "dominant period (years)": 0.63
+    },
+    {
+      "underlying": "BSKR",
+      "n_obs": 3196,
+      "dominant period (trading days)": 457,
+      "dominant period (years)": 1.81
+    },
+    {
+      "underlying": "CORL",
+      "n_obs": 3196,
+      "dominant period (trading days)": 457,
+      "dominant period (years)": 1.81
+    },
+    {
+      "underlying": "CLNE",
+      "n_obs": 3196,
+      "dominant period (trading days)": 457,
+      "dominant period (years)": 1.81
+    },
+    {
+      "underlying": "DRC",
+      "n_obs": 3196,
+      "dominant period (trading days)": 457,
+      "dominant period (years)": 1.81
+    },
+    {
+      "underlying": "JEDI",
+      "n_obs": 3196,
+      "dominant period (trading days)": 457,
+      "dominant period (years)": 1.81
+    },
+    {
+      "underlying": "KYBR",
+      "n_obs": 3196,
+      "dominant period (trading days)": 457,
+      "dominant period (years)": 1.81
+    },
+    {
+      "underlying": "NABO",
+      "n_obs": 3196,
+      "dominant period (trading days)": 457,
+      "dominant period (years)": 1.81
+    },
+    {
+      "underlying": "WOOK",
+      "n_obs": 3196,
+      "dominant period (trading days)": 457,
+      "dominant period (years)": 1.81
+    },
+    {
+      "underlying": "POBK",
+      "n_obs": 3196,
+      "dominant period (trading days)": 457,
+      "dominant period (years)": 1.81
+    },
+    {
+      "underlying": "TECH",
+      "n_obs": 3196,
+      "dominant period (trading days)": 457,
+      "dominant period (years)": 1.81
+    },
+    {
+      "underlying": "MNDO",
+      "n_obs": 3196,
+      "dominant period (trading days)": 1598,
+      "dominant period (years)": 6.34
+    },
+    {
+      "underlying": "SITH",
+      "n_obs": 3196,
+      "dominant period (trading days)": 1598,
+      "dominant period (years)": 6.34
+    },
+    {
+      "underlying": "REBL",
+      "n_obs": 3196,
+      "dominant period (trading days)": 1598,
+      "dominant period (years)": 6.34
+    }
+  ],
+  "vol_seasonality": [
+    {
+      "month": 1,
+      "mean realized_vol_63d": 0.366
+    },
+    {
+      "month": 2,
+      "mean realized_vol_63d": 0.358
+    },
+    {
+      "month": 3,
+      "mean realized_vol_63d": 0.356
+    },
+    {
+      "month": 4,
+      "mean realized_vol_63d": 0.351
+    },
+    {
+      "month": 5,
+      "mean realized_vol_63d": 0.352
+    },
+    {
+      "month": 6,
+      "mean realized_vol_63d": 0.358
+    },
+    {
+      "month": 7,
+      "mean realized_vol_63d": 0.372
+    },
+    {
+      "month": 8,
+      "mean realized_vol_63d": 0.389
+    },
+    {
+      "month": 9,
+      "mean realized_vol_63d": 0.397
+    },
+    {
+      "month": 10,
+      "mean realized_vol_63d": 0.397
+    },
+    {
+      "month": 11,
+      "mean realized_vol_63d": 0.388
+    },
+    {
+      "month": 12,
+      "mean realized_vol_63d": 0.364
+    }
+  ],
+  "reference": [
+    {
+      "underlying": "KYBR",
+      "sector": "Mineria de materiales estrategicos",
+      "structural_base_vol": 0.22,
+      "mean_realised": 0.265
+    },
+    {
+      "underlying": "CORL",
+      "sector": "Logistica y transporte",
+      "structural_base_vol": 0.28,
+      "mean_realised": 0.346
+    },
+    {
+      "underlying": "MNDO",
+      "sector": "Defensa y armamento",
+      "structural_base_vol": 0.35,
+      "mean_realised": 0.43
+    },
+    {
+      "underlying": "HTTX",
+      "sector": "Comercio y materias primas",
+      "structural_base_vol": 0.5,
+      "mean_realised": 0.874
+    },
+    {
+      "underlying": "TECH",
+      "sector": "Tecnologia y automatizacion",
+      "structural_base_vol": 0.32,
+      "mean_realised": 0.391
+    },
+    {
+      "underlying": "SITH",
+      "sector": "Energia e infraestructuras",
+      "structural_base_vol": 0.26,
+      "mean_realised": 0.319
+    },
+    {
+      "underlying": "JEDI",
+      "sector": "Gestion patrimonial",
+      "structural_base_vol": 0.14,
+      "mean_realised": 0.172
+    },
+    {
+      "underlying": "BSKR",
+      "sector": "Metales y aleaciones",
+      "structural_base_vol": 0.3,
+      "mean_realised": 0.365
+    },
+    {
+      "underlying": "POBK",
+      "sector": "Ocio y entretenimiento",
+      "structural_base_vol": 0.42,
+      "mean_realised": 0.507
+    },
+    {
+      "underlying": "NABO",
+      "sector": "Agricultura y biotecnologia",
+      "structural_base_vol": 0.11,
+      "mean_realised": 0.137
+    },
+    {
+      "underlying": "REBL",
+      "sector": "Renta fija especulativa",
+      "structural_base_vol": 0.18,
+      "mean_realised": 0.478
+    },
+    {
+      "underlying": "WOOK",
+      "sector": "Manufactura",
+      "structural_base_vol": 0.27,
+      "mean_realised": 0.333
+    },
+    {
+      "underlying": "CLNE",
+      "sector": "Servicios y personal",
+      "structural_base_vol": 0.15,
+      "mean_realised": 0.186
+    },
+    {
+      "underlying": "DRC",
+      "sector": "Consumo y distribucion",
+      "structural_base_vol": 0.31,
+      "mean_realised": 0.382
+    }
+  ],
+  "vol_correlation": [
+    {
+      "feature": "quoted_implied_vol",
+      "quoted_implied_vol": 1.0,
+      "rv_mean": 0.647,
+      "sb_mean": 0.947,
+      "mkt_vol": 0.007
+    },
+    {
+      "feature": "rv_mean",
+      "quoted_implied_vol": 0.647,
+      "rv_mean": 1.0,
+      "sb_mean": 0.679,
+      "mkt_vol": 0.447
+    },
+    {
+      "feature": "sb_mean",
+      "quoted_implied_vol": 0.947,
+      "rv_mean": 0.679,
+      "sb_mean": 1.0,
+      "mkt_vol": 0.005
+    },
+    {
+      "feature": "mkt_vol",
+      "quoted_implied_vol": 0.007,
+      "rv_mean": 0.447,
+      "sb_mean": 0.005,
+      "mkt_vol": 1.0
+    }
+  ],
+  "vol_r2": [
+    {
+      "predicting quoted_implied_vol from": "structural_base_vol only",
+      "R^2": 0.896
+    },
+    {
+      "predicting quoted_implied_vol from": "realized_vol_63d only",
+      "R^2": 0.418
+    },
+    {
+      "predicting quoted_implied_vol from": "market-wide level only",
+      "R^2": 0.0
+    },
+    {
+      "predicting quoted_implied_vol from": "structural + realized",
+      "R^2": 0.896
+    },
+    {
+      "predicting quoted_implied_vol from": "structural + realized + market-wide",
+      "R^2": 0.896
+    }
+  ],
+  "vol_target_correlation": [
+    {
+      "feature": "rv_mean",
+      "spearman vs target": -0.127
+    },
+    {
+      "feature": "sb_mean",
+      "spearman vs target": -0.048
+    },
+    {
+      "feature": "mkt_vol",
+      "spearman vs target": -0.038
+    }
+  ],
+  "mkt_vol_by_product": [
+    {
+      "product_type": "Holocron Reverse Convertible",
+      "n": 2367,
+      "spearman vs target": -0.235
+    },
+    {
+      "product_type": "Mandalorian Twin-Win",
+      "n": 2299,
+      "spearman vs target": -0.233
+    },
+    {
+      "product_type": "Wretched Hive Digital",
+      "n": 2324,
+      "spearman vs target": -0.047
+    },
+    {
+      "product_type": "Sith Eternal Snowball",
+      "n": 2304,
+      "spearman vs target": 0.051
+    },
+    {
+      "product_type": "Kessel Run Snowball",
+      "n": 2219,
+      "spearman vs target": 0.058
+    },
+    {
+      "product_type": "Death Star Phoenix Note",
+      "n": 2283,
+      "spearman vs target": 0.127
+    }
+  ],
+  "checks": [
+    {
+      "table": "rfqs",
+      "check": "duplicated rfq_id",
+      "result": 0
+    },
+    {
+      "table": "rfqs",
+      "check": "executed, no avg_duration_months",
+      "result": 0
+    },
+    {
+      "table": "rfqs",
+      "check": "not executed, has avg_duration_months",
+      "result": 0
+    },
+    {
+      "table": "rfqs",
+      "check": "not executed, has start/end dates",
+      "result": 11204
+    },
+    {
+      "table": "rfqs",
+      "check": "negative avg_duration_months",
+      "result": 0
+    },
+    {
+      "table": "rfqs",
+      "check": "avg_duration_months above nominal tenor",
+      "result": 303
+    },
+    {
+      "table": "rfqs",
+      "check": "avg_duration_months below no-call period",
+      "result": 0
+    },
+    {
+      "table": "rfqs",
+      "check": "end_date before start_date",
+      "result": 0
+    },
+    {
+      "table": "rfqs",
+      "check": "start_date before requested_date",
+      "result": 0
+    },
+    {
+      "table": "rfqs",
+      "check": "observation_frequency labels",
+      "result": 18
+    },
+    {
+      "table": "rfqs",
+      "check": "  of which unmapped",
+      "result": 0
+    },
+    {
+      "table": "rfqs",
+      "check": "  distinct intervals they encode",
+      "result": 6
+    },
+    {
+      "table": "rfqs",
+      "check": "columns with nulls",
+      "result": 0
+    },
+    {
+      "table": "daily_volatility",
+      "check": "duplicated (date, underlying)",
+      "result": 0
+    },
+    {
+      "table": "daily_volatility",
+      "check": "null realized_vol_63d",
+      "result": 0
+    },
+    {
+      "table": "daily_volatility",
+      "check": "negative realized_vol_63d",
+      "result": 0
+    },
+    {
+      "table": "daily_volatility",
+      "check": "gaps longer than 7 days",
+      "result": 0
+    },
+    {
+      "table": "underlyings_reference",
+      "check": "duplicated underlying",
+      "result": 0
+    },
+    {
+      "table": "underlyings_reference",
+      "check": "sectors / tickers",
+      "result": "14 / 14"
+    },
+    {
+      "table": "integration",
+      "check": "RFQ tickers missing from reference",
+      "result": 0
+    },
+    {
+      "table": "integration",
+      "check": "RFQ tickers missing from vol panel",
+      "result": 0
+    },
+    {
+      "table": "integration",
+      "check": "legs with no vol history at requested_date",
+      "result": 0
+    }
+  ],
+  "scalars": {
+    "n_rfqs": 25000,
+    "n_executed": 13796,
+    "n_labelled": 13796,
+    "target_above_tenor": 303,
+    "target_at_tenor": 371,
+    "requested_date": [
+      "2016-01-04",
+      "2024-06-28"
+    ],
+    "vol_panel": [
+      "2014-04-01",
+      "2026-06-30"
+    ],
+    "legs": 45699,
+    "legs_covered": 45699,
+    "structural_vs_realised_corr": 0.866
+  }
+}
