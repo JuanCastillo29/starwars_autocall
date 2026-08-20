@@ -1,0 +1,12 @@
+services:
+  dev:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile
+    volumes:
+      - ./:/app
+    ports:
+      - "8000:8000"   # API
+      - "8888:8888"   # JupyterLab
+    stdin_open: true
+    tty: true
