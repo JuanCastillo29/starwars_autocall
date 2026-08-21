@@ -218,7 +218,12 @@ __marimo__/
 .streamlit/secrets.toml
 
 # Data
+# Source CSVs are committed on purpose (reproducibility requirement: training
+# must run from source CSVs without an external data drop). Only the
+# regenerable intermediate outputs (features.csv/splits.csv, rebuilt by
+# scripts/preprocess.py and scripts/split.py) are ignored.
 *.csv
+!data/raw/*.csv
 *.pdf
 
 # MLflow tracking store (docker/mlflow.Dockerfile, docker-compose.yml)
