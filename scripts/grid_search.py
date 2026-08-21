@@ -1,22 +1,25 @@
 #!/usr/bin/env python
 """Grid search over LightGBM hyperparameters, every combination logged to MLflow.
 
-Reuses train.py's run_training() (same purged CV + held-out test split, same
-"autocall-duration" experiment) so grid runs sit next to single-run training
-in the MLflow UI and can be compared there: sort the runs table by
-cv_mae_mean, or use the parallel-coordinates plot to see which
-hyperparameters actually move it.
+Reuses train.py's run_training() (same purged CV, same "autocall-duration"
+experiment) so grid runs sit next to single-run training in the MLflow UI
+and can be compared there: sort the runs table by cv_mae_mean, or use the
+parallel-coordinates plot to see which hyperparameters actually move it.
+Combinations are picked by cv_mae_mean alone - test is never scored during
+the sweep (score_test=False), only for the winning combination's
+confirmation run, so it stays a clean, un-peeked-at holdout instead of
+having 576 looks taken at it.
 
 Grid runs skip the per-round loss curve and model artifact (tags.grid_search
-= "true") to keep the sweep's wall time down, since the CV/test summary
-metrics are all a comparison needs. Once the sweep finishes, the best
-combination (lowest cv_mae_mean) is re-run once with both enabled
-(tags.role = "best"), so the winner still ends up with a full training curve
-and a loadable model.
+= "true") to keep the sweep's wall time down, since the CV summary metrics
+are all a comparison needs. Once the sweep finishes, the best combination
+(lowest cv_mae_mean) is re-run once with both enabled and test scored
+(tags.role = "best"), so the winner still ends up with a full training
+curve, a loadable model, and a test MAE.
 
-PARAM_GRID's 4*4*4*3*3 = 576 combinations (num_leaves, learning_rate,
+PARAM_GRID's 3*4*3*3*3 = 324 combinations (num_leaves, learning_rate,
 min_child_samples, n_estimators, and random_state, the model-init seed, to
-see how much the ranking moves just from re-seeding) take roughly an hour at
+see how much the ranking moves just from re-seeding) take roughly 30-45min at
 ~5-6s/combo without curve logging. Trim PARAM_GRID for a quicker pass.
 
     docker compose up -d mlflow
@@ -36,9 +39,9 @@ from preprocess import latest_version
 from train import DEFAULT_LGB_PARAMS, EXPERIMENT_NAME, load_dataset, run_training
 
 PARAM_GRID = {
-    "num_leaves": [15, 31, 63, 127],
+    "num_leaves": [15, 31, 63],
     "learning_rate": [0.01, 0.03, 0.05, 0.1],
-    "min_child_samples": [5, 10, 20, 50],
+    "min_child_samples": [5, 10, 20],
     "n_estimators": [300, 500, 1000],
     "random_state": [0, 1, 2],  # model-initialization seed, also checks how seed-sensitive the ranking is
 }
@@ -74,19 +77,19 @@ def main():
     results = []
     for i, overrides in enumerate(combos):
         lgb_params = {**DEFAULT_LGB_PARAMS, **overrides}
-        _, cv_results, test_mae, _, _ = run_training(
+        _, cv_results, _, _, _ = run_training(
             features, splits, version, lgb_params,
             run_name=f"grid_v{version}_{i:03d}",
-            log_model=False, log_fold_curves=False, log_final_curve=False,
+            log_model=False, log_fold_curves=False, log_final_curve=False, score_test=False,
             tags={"grid_search": "true"},
         )
         cv_mae_mean = cv_results.MAE.mean()
-        results.append({**overrides, "cv_mae_mean": cv_mae_mean, "test_mae": test_mae})
-        print(f"[{i + 1}/{len(combos)}] {overrides} -> cv_mae_mean={cv_mae_mean:.4f} test_mae={test_mae:.4f}")
+        results.append({**overrides, "cv_mae_mean": cv_mae_mean})
+        print(f"[{i + 1}/{len(combos)}] {overrides} -> cv_mae_mean={cv_mae_mean:.4f}")
 
     best = min(results, key=lambda r: r["cv_mae_mean"])
     best_params = {k: best[k] for k in PARAM_GRID}
-    print(f"\nBest: {best_params} -> cv_mae_mean={best['cv_mae_mean']:.4f} test_mae={best['test_mae']:.4f}")
+    print(f"\nBest: {best_params} -> cv_mae_mean={best['cv_mae_mean']:.4f}")
 
     print("Re-running best combination with the full model + loss curve logged...")
     lgb_params = {**DEFAULT_LGB_PARAMS, **best_params}

@@ -150,8 +150,9 @@ docker compose run --rm dev python scripts/grid_search.py
 Numbers below are for the `v1` dataset's grid-search winner (`num_leaves=31, learning_rate=0.03,
 min_child_samples=5, n_estimators=1000, random_state=2`, from the 324-combination sweep in
 [§5](#5-hyperparameter-search-scriptsgrid_searchpy)), scored on the held-out test split (2,695
-rows, never seen during CV or the grid). These were captured before `train.py`'s early-stopping
-change (§4); re-run `train.py`/`grid_search.py` to refresh this table against the current code.
+rows, never seen during CV or the grid). Same winning params as before, but re-run against
+`train.py`'s early-stopping change (§4), which shifts the final fit's stopping point and moves the
+test numbers below.
 
 ### Against two baselines
 
@@ -159,7 +160,8 @@ change (§4); re-run `train.py`/`grid_search.py` to refresh this table against t
 |---|---|
 | Global average (predict `train_val`'s mean for every row) | 17.78 |
 | Average by `product_type` (predict `train_val`'s per-product mean) | 15.19 |
-| Grid-search LightGBM model | **4.43** |
+| Worst grid-search combination (`num_leaves=15, learning_rate=0.01, min_child_samples=20, n_estimators=300`), CV MAE | 6.51 |
+| Grid-search LightGBM model (best, test MAE) | **4.62** |
 
 `product_type` is by far the strongest categorical driver on its own (eta² 0.25), yet a predictor
 that knows *only* the product barely improves on knowing nothing (17.78 down to 15.19). The trained
@@ -170,14 +172,14 @@ resolving which of the six products a quote belongs to.
 
 | product_type | n | MAE (months) |
 |---|---|---|
-| Holocron Reverse Convertible | 488 | 4.79 |
-| Wretched Hive Digital | 415 | 4.41 |
-| Kessel Run Snowball | 440 | 4.37 |
-| Mandalorian Twin-Win | 451 | 4.36 |
-| Sith Eternal Snowball | 462 | 4.30 |
-| Death Star Phoenix Note | 439 | 4.29 |
+| Holocron Reverse Convertible | 488 | 4.91 |
+| Sith Eternal Snowball | 462 | 4.60 |
+| Wretched Hive Digital | 415 | 4.59 |
+| Kessel Run Snowball | 440 | 4.57 |
+| Death Star Phoenix Note | 439 | 4.53 |
+| Mandalorian Twin-Win | 451 | 4.47 |
 
-Worst-to-best spread is 0.50 months; no product is a materially weak point relative to the others.
+Worst-to-best spread is 0.44 months; no product is a materially weak point relative to the others.
 
 ### Test MAE by target quartile
 
@@ -186,10 +188,10 @@ RFQs rather than spread evenly.
 
 | quartile | `avg_duration_months` range | n | MAE (months) |
 |---|---|---|---|
-| 0 | 2.08-22.46 | 674 | 3.85 |
-| 1 | 22.46-35.52 | 674 | 3.13 |
-| 2 | 35.52-51.61 | 673 | 4.55 |
-| 3 | 51.61-118.15 | 674 | 6.17 |
+| 0 | 2.08-22.46 | 674 | 3.82 |
+| 1 | 22.46-35.52 | 674 | 3.37 |
+| 2 | 35.52-51.61 | 673 | 4.82 |
+| 3 | 51.61-118.15 | 674 | 6.46 |
 
 Error grows with duration, which is expected since MAE scales with the magnitude of the thing being
 predicted, but even the top quartile (durations past ~4.3 years) stays well under both baselines.

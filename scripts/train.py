@@ -4,18 +4,22 @@
 Reads data/processed/vN/{features.csv,splits.csv} (row-aligned, see
 split.py). Runs the 5-fold purged CV first to report an honest out-of-time
 MAE for the fold_0..fold_4 columns split.py wrote (purged rows are excluded
-from both train and val), then fits one final model on the full train_val
-pool and scores it on the held-out test split.
+from both train and val), then fits one final model on train_val, using
+fold_4's val block (its most recent, already-purged block) for early
+stopping, and scores it on the held-out test split - test is never passed
+to `.fit()`, only `.predict()`-ed on, so it can't influence how many
+boosting rounds get fit.
 
 Every run is logged to MLflow (experiment "autocall-duration"): params,
 per-fold and summary metrics, and the final model. `run_training()` takes
 lgb_params as an argument specifically so scripts/grid_search.py can call it
 per parameter combination and compare runs in the MLflow UI:
 `docker compose up mlflow` then http://localhost:5000. Also logged as
-per-boosting-round step metrics: `final_train_mae` / `final_test_mae` (the
-final model's train-vs-test loss curve) and `final_gap_mae`
-(test_mae - train_mae, the overfitting gap); pass --fold-curves to get the
-same three per CV fold too (fold{k}_train_mae etc.).
+per-boosting-round step metrics: `final_train_mae` / `final_val_mae` (the
+final model's train-vs-early-stopping-val loss curve) and `final_gap_mae`
+(val_mae - train_mae, the overfitting gap); pass --fold-curves to get the
+same three per CV fold too (fold{k}_train_mae etc.). `test_mae` itself is
+logged once, as a plain scalar, from the post-fit `.predict()` on test.
 
 This container logs over HTTP (MLFLOW_TRACKING_URI=http://mlflow:5000, set
 in docker-compose.yml) using mlflow-skinny (see requirements-dev.txt): full
@@ -154,28 +158,43 @@ def mae_by_target_percentile(eval_df, target=TARGET, n_bins=4):
 
 
 def fit_final(features, splits, feature_cols, lgb_params, log_curves=True):
-    train_val_mask = splits.split == "train_val"
-    test_mask = splits.split == "test"
-    model, preds = fit_predict(
-        features[train_val_mask], features[test_mask], feature_cols, lgb_params, eval_name="test"
+    """Trains the final model on train_val, early-stopping against fold_4's
+    val block (the most recent, already-purged block of the train_val pool).
+    Never touches test - that's scored separately by score_on_test(), and
+    only for the one confirmation run, not every grid_search.py combination.
+    """
+    fit_mask = splits.fold_4 == "train"
+    early_val_mask = splits.fold_4 == "val"
+
+    model, _ = fit_predict(
+        features[fit_mask], features[early_val_mask], feature_cols, lgb_params, eval_name="val"
     )
     if log_curves:
-        log_loss_curve(model, eval_name="test", prefix="final_")
+        log_loss_curve(model, eval_name="val", prefix="final_")
+    return model
 
+
+def score_on_test(model, features, splits, feature_cols):
+    """Scores an already-fit model on the held-out test split. Call this
+    only once per model you actually intend to ship or report on - not per
+    grid_search.py combination, or test stops being a clean holdout.
+    """
+    test_mask = splits.split == "test"
     eval_df = features[test_mask].copy()
-    eval_df["pred"] = preds
+    eval_df["pred"] = model.predict(eval_df[feature_cols])
     mae = mean_absolute_error(eval_df[TARGET], eval_df["pred"])
     product_breakdown = mae_by_product(eval_df)
     percentile_breakdown = mae_by_target_percentile(eval_df)
 
-    return model, mae, int(test_mask.sum()), product_breakdown, percentile_breakdown
+    return mae, int(test_mask.sum()), product_breakdown, percentile_breakdown
 
 
 def run_training(
     features, splits, version, lgb_params, run_name=None,
-    log_model=True, log_fold_curves=False, log_final_curve=True, tags=None,
+    log_model=True, log_fold_curves=False, log_final_curve=True, score_test=True, tags=None,
 ):
-    """One MLflow run: purged CV, then a final fit against the test split.
+    """One MLflow run: purged CV, then a final fit early-stopped against
+    fold_4's val block.
 
     log_fold_curves logs a full train/val/gap curve for every CV fold too
     (fold{k}_train_mae etc.), not just the final model's (final_*), off by
@@ -185,15 +204,19 @@ def run_training(
     turns both off per-combination (they dominate a grid's wall time) and
     re-enables them only for the winning combination's confirmation run.
 
-    Also logs the final model's test MAE broken down by product_type
-    (test_mae_product_{name}) and by quartile of the true target
-    (test_mae_by_target_pctile, as a 4-step metric). The pooled test_mae can
-    hide a model that's fine on 5 products, or on short-duration RFQs, and
-    bad everywhere else.
+    score_test controls whether the final model is scored against the
+    held-out test split at all (test_mae, plus its breakdown by
+    product_type and by quartile of the true target - the pooled test_mae
+    can hide a model that's fine on 5 products, or on short-duration RFQs,
+    and bad everywhere else). Default on for a single run, but
+    scripts/grid_search.py turns it off for every grid combination and only
+    scores test once, for the winning combination's confirmation run -
+    otherwise test stops being a clean holdout after 576 looks at it.
 
     Returns (model, cv_results, test_mae, product_breakdown,
     percentile_breakdown) so callers (main(), grid_search.py) can inspect
-    results without re-reading MLflow.
+    results without re-reading MLflow. test_mae/product_breakdown/
+    percentile_breakdown are None when score_test=False.
     """
     feature_cols = [c for c in features.columns if c != TARGET]
 
@@ -207,16 +230,20 @@ def run_training(
         mlflow.log_metric("cv_mae_mean", cv_results.MAE.mean())
         mlflow.log_metric("cv_mae_std", cv_results.MAE.std())
 
-        model, test_mae, n_test, product_breakdown, percentile_breakdown = fit_final(
-            features, splits, feature_cols, lgb_params, log_curves=log_final_curve
-        )
-        mlflow.log_metric("test_mae", test_mae)
-        mlflow.log_param("n_test", n_test)
+        model = fit_final(features, splits, feature_cols, lgb_params, log_curves=log_final_curve)
 
-        for _, row in product_breakdown.iterrows():
-            mlflow.log_metric(f"test_mae_product_{_slug(row.product_type)}", row.MAE)
-        for _, row in percentile_breakdown.iterrows():
-            mlflow.log_metric("test_mae_by_target_pctile", row.MAE, step=int(row.bin))
+        test_mae = product_breakdown = percentile_breakdown = None
+        if score_test:
+            test_mae, n_test, product_breakdown, percentile_breakdown = score_on_test(
+                model, features, splits, feature_cols
+            )
+            mlflow.log_metric("test_mae", test_mae)
+            mlflow.log_param("n_test", n_test)
+
+            for _, row in product_breakdown.iterrows():
+                mlflow.log_metric(f"test_mae_product_{_slug(row.product_type)}", row.MAE)
+            for _, row in percentile_breakdown.iterrows():
+                mlflow.log_metric("test_mae_by_target_pctile", row.MAE, step=int(row.bin))
 
         if log_model:
             mlflow.lightgbm.log_model(model, name="model")
